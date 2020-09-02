@@ -34,34 +34,44 @@ namespace GoogleLoginDemo.Controllers
 
         public RedirectResult LoginHandler()
         {
-            try
+            var url = Request.Url.Query;
+            if (url != "")
             {
-                var url = Request.Url.Query;
-                if (url != "")
+                string code = Request.QueryString["code"];
+
+                if (code != null)
                 {
-                    string code = Request.QueryString["code"];
+                    var result = GoogleLoginService.GetGoogleOauth(code);
 
-                    if (code != null)
-                    {
-                        var result = GoogleLoginService.GetGoogleOauth(code);
-
-                        Session["UserId"] = result.id;
-                        Session["UserEmail"] = result.email;
-                        Session["UserGivenName"] = result.given_name;
-                    }
+                    Session["AccessToken"] = result.token;
+                    Session["UserId"] = result.id;
+                    Session["UserEmail"] = result.email;
+                    Session["UserGivenName"] = result.given_name;
                 }
+            }
 
-                return Redirect(Url.Action("LoginComplete"));
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message, ex);
-            }
+            TempData["message"] = "登入成功";
+
+            return Redirect(Url.Action("LoginComplete"));
         }
 
         public ActionResult LoginComplete()
         {
             return View();
+        }
+
+        public RedirectResult Logout()
+        {
+            if (Session["AccessToken"] != null && GoogleLoginService.OuathChecker(Session["AccessToken"].ToString()))
+            {
+                HttpHelper.CreateHttpGetRequest("https://accounts.google.com/o/oauth2/revoke?token=" + Session["AccessToken"], "");
+            }
+
+            TempData["message"] = "登出成功";
+            return Redirect(Url.Action("Index", "Home"));
+
+            //return Redirect(string.Format("https://accounts.google.com/o/oauth2/revoke?token={0}", Session["AccessToken"]));
+            //return Redirect("https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=" + Url.Action("Index", "Home", null, Request.Url.Scheme));
         }
     }
 }

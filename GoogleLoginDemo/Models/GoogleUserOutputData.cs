@@ -16,5 +16,7 @@ namespace GoogleLoginDemo.Models
         public string email { get; set; }
 
         public string picture { get; set; }
+
+        public string token { get; set; }
     }
 }
