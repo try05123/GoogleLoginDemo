@@ -27,7 +27,8 @@ namespace GoogleLoginDemo.Controllers
                 "response_type=code" +
                 "&redirect_uri=" + googleRedirectUrl +
                 "&scope=https://www.googleapis.com/auth/userinfo.email%20https://www.googleapis.com/auth/userinfo.profile" +
-                "&client_id=" + googleClientId;
+                "&client_id=" + googleClientId +
+                "&prompt=select_account";
 
             return Redirect(oauthUrl);
         }

@@ -25,9 +25,7 @@
 @if (TempData["message"] != null)
 {
     <script>
-        $(function () {
             var message = @Html.Raw(Json.Encode(TempData["message"]));
             alert(message);
-        });
     </script>
 }

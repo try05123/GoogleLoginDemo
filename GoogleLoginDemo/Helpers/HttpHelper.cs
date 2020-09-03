@@ -16,7 +16,7 @@ namespace GoogleLoginDemo.Helpers
 
             WebRequest request = WebRequest.Create(apiUrl);
             request.Method = "POST";
-            request.Timeout = 3000;
+            request.Timeout = 30000;
             request.ContentType = "application/x-www-form-urlencoded";
             byte[] byteArray = Encoding.UTF8.GetBytes(data);
             request.ContentLength = byteArray.Length;
